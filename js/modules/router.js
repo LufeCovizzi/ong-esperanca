@@ -24,6 +24,8 @@ let controlador = null;
 // Lê o hash atual e separa rota e seção.
 // Ex.: "#/projetos/voluntariado" -> { rota: "projetos", secao: "voluntariado" }
 function lerHash() {
+  // Hashes que não seguem o padrão "#/rota" (ex.: "#app") não são rotas
+  if (location.hash && !location.hash.startsWith('#/')) return null;
   const [, rota, secao] = location.hash.split('/');
   // toLowerCase: "#/Cadastro" digitado à mão também funciona
   return { rota: (rota || ROTA_PADRAO).toLowerCase(), secao };
@@ -43,7 +45,9 @@ function atualizarMenu(rota) {
 // Função principal: limpa o contêiner e injeta o novo fragmento
 async function renderizar() {
   const app = document.querySelector('#app');
-  const { rota, secao } = lerHash();
+  const destino = lerHash();
+  if (!destino) return;                       // não é uma rota: ignora
+  const { rota, secao } = destino;
 
   const minhaNavegacao = ++navegacaoAtual;   // "senha" desta navegação
   controlador?.abort();                       // cancela o fetch anterior, se ainda estiver em andamento
@@ -110,6 +114,14 @@ export function iniciarRouter() {
   // hashchange. Sem isto, após uma falha de rede o usuário ficava preso na
   // mensagem de erro. Também trata o botão "Tentar novamente".
   document.addEventListener('click', (evento) => {
+    // Link "Pular para o conteúdo": leva o foco ao <main> sem alterar a URL.
+    // Antes, o hash "#app" era lido como rota vazia e abria a página inicial.
+    if (evento.target.closest('.pular-conteudo')) {
+      evento.preventDefault();
+      document.querySelector('#app').focus();
+      return;
+    }
+
     const link = evento.target.closest('a[href^="#/"]');
     const repetiuRota = link && link.getAttribute('href') === location.hash;
     if (repetiuRota || evento.target.closest('.tentar-novamente')) renderizar();
