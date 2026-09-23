@@ -1,0 +1,59 @@
+# =========================================================
+# CI/CD: build com Vite e publicação no GitHub Pages
+# - Pull requests para develop/main: só roda o build (CI),
+#   garantindo que nada quebrado seja mesclado.
+# - Push na main (nova release): build + deploy (CD).
+# =========================================================
+name: Build e deploy
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [main]
+  workflow_dispatch:            # permite rodar manualmente pela aba Actions
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:                    # um deploy por vez; não cancela o que está em andamento
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Gerar o build de produção
+        run: npm run build
+
+      - name: Enviar o dist/ como artefato do Pages
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

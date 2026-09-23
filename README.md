@@ -6,6 +6,8 @@
 ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![Chart.js](https://img.shields.io/badge/Chart.js-4.5.1-FF6384?logo=chartdotjs&logoColor=white)
 
+**Site publicado:** https://lufecovizzi.github.io/ong-esperanca/
+
 Site institucional de uma ONG fictícia, construído como **Single Page Application (SPA)** em HTML5, CSS3 e JavaScript puro, sem frameworks. Projeto acadêmico do curso de Análise e Desenvolvimento de Sistemas.
 
 ## Sumário
@@ -17,6 +19,7 @@ Site institucional de uma ONG fictícia, construído como **Single Page Applicat
 - [Pré-requisitos](#pré-requisitos)
 - [Instalação e execução local](#instalação-e-execução-local)
 - [Build](#build)
+- [Deploy](#deploy)
 - [Validação e testes](#validação-e-testes)
 - [Versionamento](#versionamento)
 - [Acessibilidade](#acessibilidade)
@@ -53,6 +56,8 @@ A ONG Esperança precisava de um site para divulgar seus projetos sociais, capta
 
 ```
 ong-esperanca/
+├── .github/workflows/
+│   └── deploy.yml            CI/CD: build e deploy no GitHub Pages
 ├── html/
 │   ├── index.html            casca da SPA (cabeçalho, menu, <main id="app">, toast e rodapé)
 │   └── views/                fragmentos injetados no #app pelo router
@@ -155,6 +160,20 @@ O que o build faz:
 | **Total** | **78,4 KB** | **44,6 KB** | **43,2%** |
 
 Com a compressão gzip aplicada pelos servidores, o total transferido cai para 15,3 KB (80,5% menor que o código-fonte). A pasta `dist/` é gerada e não é versionada.
+
+## Deploy
+
+O site é publicado no **GitHub Pages** por um workflow do **GitHub Actions** (`.github/workflows/deploy.yml`):
+
+| Evento | O que acontece |
+|---|---|
+| Pull request para `develop` ou `main` | **CI:** instala as dependências e roda `npm run build`. Se o build falhar, o PR fica marcado com erro. |
+| Push na `main` (merge de uma release) | **CD:** gera o build e publica a pasta `dist/` no GitHub Pages. |
+| Manual (aba Actions > Run workflow) | Refaz o deploy da `main`. |
+
+Configuração feita uma única vez no repositório: **Settings > Pages > Source: GitHub Actions**.
+
+Como o site fica numa subpasta (`/ong-esperanca/`), o build usa caminhos relativos (`base: './'`) e gera um `index.html` na raiz que redireciona para `html/index.html`.
 
 ## Validação e testes
 
