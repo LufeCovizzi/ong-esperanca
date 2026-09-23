@@ -29,7 +29,7 @@ async function carregarChartJs() {
   return Chart;
 }
 
-// Lê uma variável CSS (ex.: --verde) para o gráfico seguir a paleta do site
+// Lê uma variável CSS (ex.: --primaria) para o gráfico seguir a paleta do tema
 function corCss(nome) {
   return getComputedStyle(document.documentElement).getPropertyValue(nome).trim();
 }
@@ -63,12 +63,16 @@ async function desenharGrafico() {
 
     const semAnimacao = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    // Textos e linhas do gráfico seguem as cores do tema atual
+    ChartJs.defaults.color = corCss('--texto');
+    ChartJs.defaults.borderColor = corCss('--borda-suave');
+
     grafico = new ChartJs(canvas, {
       type: 'bar',
       data: {
         labels: impacto.anos,
         datasets: [
-          { label: 'Famílias atendidas', data: impacto.familias, backgroundColor: corCss('--verde'), borderRadius: 6 },
+          { label: 'Famílias atendidas', data: impacto.familias, backgroundColor: corCss('--primaria'), borderRadius: 6 },
           { label: 'Voluntários ativos', data: impacto.voluntarios, backgroundColor: corCss('--info'), borderRadius: 6 },
         ],
       },
@@ -91,5 +95,10 @@ async function desenharGrafico() {
 export function iniciarGrafico() {
   document.addEventListener('rota:carregada', (evento) => {
     if (evento.detail.rota === 'inicio') desenharGrafico();
+  });
+
+  // Troca de tema: redesenha o gráfico com as novas cores (se estiver na tela)
+  document.addEventListener('tema:alterado', () => {
+    if (document.querySelector('#grafico-impacto')) desenharGrafico();
   });
 }
