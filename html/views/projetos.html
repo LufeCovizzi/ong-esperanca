@@ -4,8 +4,14 @@
     <p>Conheça as principais ações desenvolvidas pela organização para apoiar a comunidade.</p>
     <figure>
       <picture>
-        <source srcset="../imagens/projeto.webp" type="image/webp">
-        <img src="../imagens/projeto.jpg" alt="Ilustração de uma cesta de alimentos sendo entregue" width="800" height="500">
+        <source type="image/webp"
+                srcset="../imagens/projeto-400.webp 400w, ../imagens/projeto.webp 800w"
+                sizes="(min-width: 1280px) 800px, calc(100vw - 48px)">
+        <img src="../imagens/projeto.jpg"
+             srcset="../imagens/projeto-400.jpg 400w, ../imagens/projeto.jpg 800w"
+             sizes="(min-width: 1280px) 800px, calc(100vw - 48px)"
+             alt="Ilustração de uma cesta de alimentos sendo entregue"
+             width="800" height="500" decoding="async">
       </picture>
       <figcaption>Projeto de distribuição de alimentos.</figcaption>
     </figure>
