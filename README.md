@@ -79,6 +79,8 @@ ong-esperanca/
 │       ├── persistencia.js     rascunho e histórico do cadastro
 │       ├── grafico.js          integração com o Chart.js
 │       └── toast.js            notificações
+├── package.json              scripts do npm e dependências de desenvolvimento
+├── vite.config.js            configuração do build de produção
 ├── CHANGELOG.md              histórico de versões
 └── README.md
 ```
@@ -97,7 +99,7 @@ ong-esperanca/
 
 ## Instalação e execução local
 
-O projeto não tem dependências para instalar: não há `npm install`.
+Para **rodar** o site não é preciso instalar nada. O `npm install` só é necessário para gerar o build de produção (veja [Build](#build)).
 
 1. Clone o repositório e entre na pasta:
    ```bash
@@ -126,7 +128,33 @@ O projeto não tem dependências para instalar: não há `npm install`.
 
 ## Build
 
-Não há etapa de build. O projeto usa apenas HTML, CSS e JavaScript nativos, interpretados diretamente pelo navegador, sem transpilação nem empacotamento. Para publicar, basta copiar a pasta para qualquer hospedagem estática (por exemplo, GitHub Pages).
+O site roda direto no navegador durante o desenvolvimento, mas a versão de produção é gerada com o **[Vite](https://vite.dev/) 8**, que empacota os módulos e minifica o código. A configuração está em `vite.config.js`.
+
+Requer **Node.js 20.19 ou superior**.
+
+```bash
+npm install        # instala o Vite e o html-minifier-terser (dependências de desenvolvimento)
+npm run build      # gera a pasta dist/ pronta para produção
+npm run preview    # serve a pasta dist/ para conferir o resultado
+```
+
+Depois do `npm run preview`, acesse o endereço indicado no terminal acrescentando `/html/index.html`.
+
+O que o build faz:
+
+- Junta os 14 arquivos JavaScript em **1** e os 2 arquivos CSS em **1**, minificados e com hash no nome (cache seguro).
+- Minifica o `index.html` e as views com o `html-minifier-terser` (o Vite não minifica HTML).
+- Copia as views e as imagens, que o router carrega com `fetch()` em tempo de execução e que por isso ficam fora do grafo de módulos do Vite.
+- Mantém o Chart.js externo, carregado pela CDN com `import()` dinâmico.
+
+| Tipo | Código-fonte | Build | Redução |
+|---|---|---|---|
+| JavaScript | 14 arquivos, 36,7 KB | 1 arquivo, 16,0 KB | 56,4% |
+| CSS | 2 arquivos, 28,1 KB | 1 arquivo, 17,3 KB | 38,5% |
+| HTML | 5 arquivos, 13,6 KB | 5 arquivos, 11,3 KB | 17,2% |
+| **Total** | **78,4 KB** | **44,6 KB** | **43,2%** |
+
+Com a compressão gzip aplicada pelos servidores, o total transferido cai para 15,3 KB (80,5% menor que o código-fonte). A pasta `dist/` é gerada e não é versionada.
 
 ## Validação e testes
 
