@@ -1,6 +1,6 @@
 # ONG Esperança
 
-Versão atual: 1.0.1
+Versão atual: 1.0.2
 
 Site institucional (HTML5, CSS3 e JavaScript) organizado por separação de responsabilidades.
 
