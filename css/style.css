@@ -1,0 +1,548 @@
+/* =========================================================
+   ONG Esperança - Folha de estilos
+   Estratégia: mobile-first + CSS Grid de 12 colunas
+   ========================================================= */
+
+/* ---------- 1. Variáveis ---------- */
+:root {
+  --verde: #2e7d32;
+  --verde-escuro: #1b5e20;
+  --texto: #263238;
+  --fundo: #f5f7f5;
+
+  /* Paleta de feedback: cor forte (texto/borda) + cor clara (fundo) */
+  --sucesso: #1b5e20;  --sucesso-claro: #e8f5e9;
+  --info:    #0d47a1;  --info-claro:    #e3f2fd;
+  --aviso:   #8a4b00;  --aviso-claro:   #fff3e0;  --aviso-borda: #ef6c00;
+  --erro:    #b71c1c;  --erro-claro:    #ffebee;
+  --neutro:  #455a64;  --neutro-claro:  #eceff1;
+  --gap: 1rem;              /* espaço entre colunas (muda nos breakpoints) */
+  --largura-max: 100%;      /* largura máxima do conteúdo */
+}
+
+/* O reset fica em reset.css (carregado antes deste arquivo) */
+
+/* ---------- 2. Layout macro: áreas da página ---------- */
+body {
+  display: grid;
+  grid-template-areas:
+    "cabecalho"
+    "conteudo"
+    "rodape";
+  grid-template-rows: auto 1fr auto;  /* rodapé sempre no fim da tela */
+  min-height: 100vh;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.6;
+  color: var(--texto);
+  background: var(--fundo);
+}
+header { grid-area: cabecalho; }
+main   { grid-area: conteudo; }
+footer { grid-area: rodape; }
+
+/* ---------- 3. Sistema de 12 colunas ---------- */
+.grade {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+  width: 100%;
+  max-width: var(--largura-max);
+  margin: 1.5rem auto;
+  padding: 0 1rem;
+  align-content: start;   /* linhas do grid não esticam para preencher a altura */
+}
+.grade > * { min-width: 0; }  /* itens do grid podem encolher (evita estouro com <pre> e textos longos) */
+
+/* Mobile (base, abaixo de 480px): tudo ocupa as 12 colunas */
+.destaque, .contato, .destaque-total, .card,
+.titulo-pagina, .formulario, .formulario fieldset, .formulario button {
+  grid-column: span 12;
+}
+
+/* O formulário também é um grid de 12 colunas (grid dentro de grid) */
+.formulario button { align-self: start; }  /* botão com altura natural */
+
+.formulario {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+}
+
+/* ---------- 4. Componentes ---------- */
+header {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;                 /* permite o menu mobile descer para a linha de baixo */
+  justify-content: space-between;
+  align-items: center;
+  gap: .75rem;
+  padding: 1rem;
+  background: var(--verde);
+}
+.marca { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; color: #fff; text-decoration: none; font-size: 1.3rem; font-weight: bold; }
+
+/* =========================================================
+   MENU RESPONSIVO
+   Base (mobile): hambúrguer + menu recolhido
+   ========================================================= */
+
+/* Texto só para leitores de tela */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+}
+
+/* Checkbox que guarda o estado aberto/fechado (fica invisível, mas focável pelo teclado) */
+.menu-toggle { position: absolute; opacity: 0; width: 1px; height: 1px; }
+
+/* Ícone hambúrguer: 1 span + ::before e ::after = 3 barras */
+.menu-icone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;       /* área de toque mínima recomendada */
+  cursor: pointer;
+  border-radius: 6px;
+}
+.barras, .barras::before, .barras::after {
+  display: block;
+  width: 26px; height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: transform .3s ease, background-color .3s ease;
+}
+.barras { position: relative; }
+.barras::before, .barras::after { content: ""; position: absolute; left: 0; }
+.barras::before { top: -8px; }
+.barras::after  { top: 8px; }
+
+/* Foco visível no ícone quando o checkbox recebe foco via teclado */
+.menu-toggle:focus-visible + .menu-icone { outline: 3px solid #fff; outline-offset: 2px; }
+
+/* Menu recolhido: altura 0 e conteúdo escondido */
+nav {
+  flex-basis: 100%;                /* ocupa a linha inteira abaixo do logo */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .4s ease;
+}
+.menu { list-style: none; padding: 0; margin: 0; }
+.menu a {
+  display: block;
+  padding: .75rem .5rem;
+  color: #fff;
+  text-decoration: none;
+  border-top: 1px solid rgb(255 255 255 / 20%);
+}
+.menu a:hover, .menu a:focus-visible, .menu a[aria-current="page"] { text-decoration: underline; }
+.submenu { list-style: none; padding: 0 0 0 1rem; margin: 0; } /* no mobile: submenu indentado, sempre visível */
+
+/* Menu ABERTO: checkbox marcado -> nav irmão expande */
+.menu-toggle:checked ~ nav { max-height: 30rem; }
+
+/* Hambúrguer vira "X" quando aberto */
+.menu-toggle:checked + .menu-icone .barras { background: transparent; }
+.menu-toggle:checked + .menu-icone .barras::before { transform: translateY(8px) rotate(45deg); }
+.menu-toggle:checked + .menu-icone .barras::after  { transform: translateY(-8px) rotate(-45deg); }
+
+h1, h2 { color: var(--verde-escuro); margin-bottom: .5rem; line-height: 1.2; }
+p, ul { margin-bottom: 1rem; }
+ul { padding-left: 1.5rem; }
+img { display: block; max-width: 100%; height: auto; border-radius: 8px; }
+figcaption { font-size: .9rem; color: #546e7a; }
+address { font-style: normal; }
+
+.card, .contato {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 10%);
+}
+
+/* Cards: Flexbox em coluna para empilhar título, texto, lista e botão */
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;   /* o botão não estica na largura toda */
+}
+.card__acao { margin-top: auto; }
+/* (o atributo hidden é garantido no reset.css) */
+
+/* ---------- Filtros dos projetos ---------- */
+.filtros { display: flex; flex-wrap: wrap; gap: .5rem; }
+.filtro {
+  padding: .35rem .9rem;
+  background: #fff;
+  color: var(--verde-escuro);
+  border: 2px solid var(--verde);
+  border-radius: 999px;
+  box-shadow: none;
+  font-size: .95rem;
+}
+.filtro:hover { background: var(--sucesso-claro); box-shadow: none; transform: none; }
+.filtro[aria-pressed="true"] { background: var(--verde); color: #fff; }  /* filtro ativo */
+.contador { margin: 0; color: var(--neutro); font-size: .9rem; }  /* empurra a área do botão para o fim do card */
+
+/* Contêiner dos cards gerados por template: é um grid de 12 colunas
+   dentro do grid principal, então as regras .card (span 12/6/4) continuam valendo */
+.lista-cards {
+  grid-column: span 12;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--gap);
+}
+
+/* Contato: itens empilhados com espaçamento uniforme */
+.contato address {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+}
+.contato address p { margin-bottom: 0; overflow-wrap: anywhere; } /* e-mail longo quebra linha */
+
+/* =========================================================
+   BOTÕES E ESTADOS INTERATIVOS
+   ========================================================= */
+.botao, button {
+  display: inline-block;
+  padding: .6rem 1.2rem;
+  background: var(--verde);
+  color: #fff;
+  border: 2px solid transparent;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgb(0 0 0 / 15%);
+  transition: background-color .2s ease, box-shadow .2s ease, transform .1s ease;
+}
+
+/* hover: mouse em cima -> cor mais escura, sombra maior, "sobe" 2px */
+.botao:hover, button:hover {
+  background: var(--verde-escuro);
+  box-shadow: 0 4px 10px rgb(0 0 0 / 25%);
+  transform: translateY(-2px);
+}
+
+/* focus-visible: navegação por teclado -> anel de foco bem visível */
+.botao:focus-visible, button:focus-visible {
+  outline: 3px solid #ffb300;
+  outline-offset: 3px;
+}
+
+/* active: no momento do clique -> "afunda", sombra some */
+.botao:active, button:active {
+  transform: translateY(1px);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+}
+
+/* disabled: botão desabilitado -> cinza, sem sombra e sem clique */
+button:disabled {
+  background: #b0bec5;
+  color: #eceff1;
+  box-shadow: none;
+  transform: none;
+  cursor: not-allowed;
+  opacity: .7;
+}
+
+fieldset { border: 1px solid #c8e6c9; border-radius: 8px; padding: 1rem; background: #fff; }
+legend { font-weight: bold; padding: 0 .5rem; }
+label { display: block; margin-top: .75rem; }
+
+/* =========================================================
+   CAMPOS DO FORMULÁRIO E VALIDAÇÃO VISUAL
+   ========================================================= */
+input {
+  width: 100%;
+  padding: .5rem 2.25rem .5rem .5rem;   /* espaço à direita para o ícone ✓ / ✗ */
+  border: 2px solid #b0bec5;
+  border-radius: 4px;
+  background: #fff no-repeat right .6rem center / 1.1rem;
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+input::placeholder { color: #90a4ae; }
+
+/* focus: campo ativo -> borda azul e brilho */
+input:focus {
+  outline: none;
+  border-color: #1565c0;
+  box-shadow: 0 0 0 3px rgb(21 101 192 / 25%);
+}
+
+/* As classes abaixo são adicionadas/removidas pelo validacao.js.
+   Sem JavaScript, o navegador ainda valida pelos atributos required/pattern. */
+
+/* SUCESSO: campo aprovado pelas regras */
+input.campo--sucesso {
+  border-color: #2e7d32;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%232e7d32' stroke-width='2.5' d='M2 8.5l4 4 8-9'/%3E%3C/svg%3E");
+}
+
+/* ERRO: campo vazio ou em formato incorreto */
+input.campo--erro {
+  border-color: #c62828;
+  background-color: #fff5f5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath stroke='%23c62828' stroke-width='2.5' d='M3 3l10 10M13 3L3 13'/%3E%3C/svg%3E");
+}
+input.campo--erro:focus { box-shadow: 0 0 0 3px rgb(198 40 40 / 25%); }
+
+/* Mensagem de erro criada pelo JavaScript logo abaixo do campo */
+.mensagem-erro {
+  display: block;
+  margin-top: .25rem;
+  color: #c62828;
+  font-size: .875rem;
+  animation: erro-entra .2s ease-out;
+}
+.mensagem-erro::before { content: "\26A0  "; }  /* ícone ⚠ antes do texto */
+@keyframes erro-entra { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
+
+footer { text-align: center; padding: 1rem; background: var(--verde-escuro); color: #fff; }
+
+/* =========================================================
+   5. BREAKPOINTS (mobile-first: cada um soma ao anterior)
+   ========================================================= */
+
+/* BP1 - 480px: celulares grandes / modo paisagem */
+@media (min-width: 480px) {
+  .grade { padding: 0 1.5rem; }
+  .formulario button { grid-column: span 6; }   /* botão deixa de ocupar a linha toda */
+}
+
+/* BP2 - 768px: tablets */
+@media (min-width: 768px) {
+  :root { --gap: 1.5rem; }
+  header { flex-wrap: nowrap; padding: 1rem 2rem; }
+
+  /* Menu horizontal: some o hambúrguer, aparece a barra de links */
+  .menu-icone { display: none; }
+  nav { flex-basis: auto; max-height: none; overflow: visible; }
+  .menu { display: flex; gap: 1.5rem; }
+  .menu > li { position: relative; }  /* referência para posicionar o dropdown */
+  .menu a { border-top: 0; padding: .5rem; }
+  .tem-submenu > a::after { content: " \25BE"; }  /* setinha ▾ indicando submenu */
+
+  /* Dropdown ESCONDIDO por padrão */
+  .submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 13rem;
+    padding: .5rem 0;
+    background: var(--verde-escuro);
+    border-radius: 0 0 6px 6px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity .25s ease, transform .25s ease, visibility .25s;
+  }
+  .submenu a { padding: .5rem 1rem; }
+  .submenu a:hover, .submenu a:focus-visible { background: var(--verde); }
+
+  /* Dropdown VISÍVEL ao passar o mouse ou navegar com Tab */
+  .tem-submenu:hover > .submenu,
+  .tem-submenu:focus-within > .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .card { grid-column: span 6; }                 /* 2 cards por linha */
+  .formulario button { grid-column: span 4; }
+}
+
+/* BP3 - 1024px: notebooks */
+@media (min-width: 1024px) {
+  .destaque { grid-column: span 8; }            /* conteúdo principal: 8 colunas */
+  .contato  { grid-column: span 4; align-self: start; }  /* lateral: 4 colunas */
+  .card { grid-column: span 4; }                 /* 3 cards por linha */
+  .formulario fieldset { grid-column: span 6; }  /* 2 fieldsets lado a lado */
+  .formulario button { grid-column: 10 / span 3; } /* botão alinhado à direita */
+}
+
+/* BP4 - 1280px: desktops */
+@media (min-width: 1280px) {
+  :root { --gap: 2rem; --largura-max: 1200px; }  /* conteúdo centralizado */
+  header { padding: 1rem calc((100% - 1200px) / 2 + 1rem); }
+  .destaque-total { grid-column: 2 / span 10; }  /* respiro nas laterais */
+}
+
+/* BP5 - 1440px: desktops panorâmicos (widescreen) */
+@media (min-width: 1440px) {
+  :root { --gap: 2.5rem; --largura-max: 1320px; }
+  body { font-size: 1.125rem; }
+  header { padding: 1.25rem calc((100% - 1320px) / 2 + 1rem); }
+  .destaque { grid-column: span 7; }
+  .contato  { grid-column: span 5; }
+}
+
+/* =========================================================
+   COMPONENTES DE FEEDBACK
+   Padrão: .componente + .componente--variante (sucesso, info, aviso, erro, neutro)
+   ========================================================= */
+
+/* ---------- Badges ---------- */
+.badge {
+  display: inline-block;
+  padding: .15rem .6rem;
+  border-radius: 999px;            /* formato de pílula */
+  font-size: .8rem;
+  font-weight: bold;
+  line-height: 1.5;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  border: 1px solid currentcolor;  /* a borda usa a mesma cor do texto */
+}
+.badge--sucesso { color: var(--sucesso); background: var(--sucesso-claro); }
+.badge--info    { color: var(--info);    background: var(--info-claro); }
+.badge--aviso   { color: var(--aviso);   background: var(--aviso-claro); }
+.badge--erro    { color: var(--erro);    background: var(--erro-claro); }
+.badge--neutro  { color: var(--neutro);  background: var(--neutro-claro); }
+.card .badge { margin-bottom: .5rem; }
+
+/* ---------- Alertas ---------- */
+.alerta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .25rem .5rem;
+  padding: .75rem 1rem;
+  border-left: 5px solid;          /* faixa colorida à esquerda */
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+.alerta p { margin: 0; }
+.alerta__titulo { flex-shrink: 0; }
+.alerta--sucesso { color: var(--sucesso); background: var(--sucesso-claro); border-color: var(--sucesso); }
+.alerta--info    { color: var(--info);    background: var(--info-claro);    border-color: var(--info); }
+.alerta--aviso   { color: var(--aviso);   background: var(--aviso-claro);   border-color: var(--aviso-borda); }
+.alerta--erro    { color: var(--erro);    background: var(--erro-claro);    border-color: var(--erro); }
+
+/* ---------- Toast ---------- */
+.toast {
+  display: none;                   /* escondido até ser acionado */
+  align-items: center;
+  gap: 1rem;
+  position: fixed;                 /* preso à tela, não à página */
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 100;
+  max-width: min(24rem, calc(100% - 2rem));
+  padding: .9rem 1rem;
+  border-left: 5px solid;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 20%);
+}
+.toast p { margin: 0; }
+.toast--sucesso { border-color: var(--sucesso); color: var(--sucesso); }
+.toast--erro    { border-color: var(--erro);    color: var(--erro); }
+.toast--info    { border-color: var(--info);    color: var(--info); }
+.toast__fechar {
+  margin-left: auto;
+  padding: 0 .25rem;
+  background: transparent;
+  color: inherit;
+  font-size: 1.5rem;
+  line-height: 1;
+  box-shadow: none;
+}
+.toast__fechar:hover { background: transparent; transform: none; box-shadow: none; }
+
+/* Visível quando o toast.js adiciona a classe .toast--visivel */
+.toast--visivel {
+  display: flex;
+  animation: toast-entra .3s ease-out;
+}
+@keyframes toast-entra { from { opacity: 0; transform: translateY(1rem); } to { opacity: 1; transform: translateY(0); } }
+
+/* Versão estática, só para exibir no guia de componentes */
+.toast--exemplo { display: flex; position: static; }
+
+/* ---------- Modal (Popover API) ---------- */
+.modal {
+  width: min(32rem, calc(100% - 2rem));
+  margin: auto;                    /* centraliza na tela */
+  padding: 0;
+  border: none;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--texto);
+  box-shadow: 0 10px 40px rgb(0 0 0 / 30%);
+}
+.modal::backdrop { background: rgb(0 0 0 / 50%); }  /* fundo escurecido atrás do modal */
+.modal:popover-open { animation: modal-entra .25s ease-out; }
+@keyframes modal-entra { from { opacity: 0; transform: scale(.95); } to { opacity: 1; transform: scale(1); } }
+
+.modal__cabecalho {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--neutro-claro);
+}
+.modal__cabecalho h2 { margin: 0; font-size: 1.25rem; }
+.modal__corpo { padding: 1.25rem; }
+.modal__rodape {
+  display: flex;
+  justify-content: flex-end;
+  gap: .75rem;
+  padding: 1rem 1.25rem;
+  border-top: 1px solid var(--neutro-claro);
+}
+.modal__fechar {
+  padding: 0 .5rem;
+  background: transparent;
+  color: var(--neutro);
+  font-size: 1.75rem;
+  line-height: 1;
+  box-shadow: none;
+}
+.modal__fechar:hover { background: var(--neutro-claro); transform: none; box-shadow: none; }
+
+.botao--secundario { background: #fff; color: var(--verde); border-color: var(--verde); }
+.botao--secundario:hover { background: var(--sucesso-claro); }
+
+/* ---------- Histórico de cadastros (localStorage) ---------- */
+.historico__lista { margin-bottom: 1rem; }
+.historico .botao { align-self: flex-start; }
+
+/* ---------- Gráfico de impacto (Chart.js) ---------- */
+.grafico { position: relative; height: 320px; margin-bottom: 1rem; }  /* Chart.js ocupa 100% deste bloco */
+.impacto details { margin-top: .5rem; }
+.impacto summary { cursor: pointer; color: var(--verde-escuro); font-weight: bold; }
+.impacto table { width: 100%; margin-top: .75rem; border-collapse: collapse; }
+.impacto caption { text-align: left; font-weight: bold; margin-bottom: .5rem; }
+.impacto th, .impacto td { padding: .4rem .6rem; border-bottom: 1px solid var(--neutro-claro); text-align: left; }
+
+/* ---------- Guia de componentes ---------- */
+.card.card--largo { grid-column: span 12; align-items: stretch; }  /* no guia, os blocos ocupam a largura toda */
+.card--largo > .botao { align-self: flex-start; }
+.vitrine { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1rem; }
+.vitrine--coluna { flex-direction: column; align-items: flex-start; }
+pre { max-width: 100%; overflow-x: auto; padding: .75rem; background: var(--neutro-claro); border-radius: 6px; font-size: .85rem; }
+
+/* ---------- SPA: acessibilidade da navegação ---------- */
+/* Link "Pular para o conteúdo": escondido até receber foco pelo teclado */
+.pular-conteudo {
+  position: absolute;
+  top: -3rem;
+  left: 1rem;
+  z-index: 200;
+  padding: .5rem 1rem;
+  background: #fff;
+  color: var(--verde-escuro);
+  border-radius: 0 0 6px 6px;
+}
+.pular-conteudo:focus { top: 0; }
+
+/* Títulos recebem foco via JS após a troca de rota; sem contorno visual */
+h1:focus, main:focus { outline: none; }
+
+footer a { color: #fff; }
+
+/* Acessibilidade: quem prefere menos movimento não vê animações */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}
