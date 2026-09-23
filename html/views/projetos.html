@@ -1,0 +1,57 @@
+<!-- Fragmento da rota #/projetos: injetado dentro de <main id="app"> pelo router.js -->
+  <section class="destaque-total">
+    <h1 tabindex="-1">Projetos sociais</h1>
+    <p>Conheça as principais ações desenvolvidas pela organização para apoiar a comunidade.</p>
+    <figure>
+      <picture>
+        <source srcset="../imagens/projeto.webp" type="image/webp">
+        <img src="../imagens/projeto.jpg" alt="Ilustração de uma cesta de alimentos sendo entregue" width="800" height="500">
+      </picture>
+      <figcaption>Projeto de distribuição de alimentos.</figcaption>
+    </figure>
+  </section>
+  <div class="alerta alerta--aviso destaque-total" role="note">
+    <strong class="alerta__titulo">Atenção:</strong>
+    <p>A Campanha do Agasalho recebe doações somente até o fim deste mês.</p>
+  </div>
+  <!-- Filtros: os cliques são tratados por delegação de eventos no filtros.js -->
+  <div class="filtros destaque-total" role="group" aria-label="Filtrar projetos por situação">
+    <button type="button" class="filtro" data-filtro="todos" aria-pressed="true">Todos</button>
+    <button type="button" class="filtro" data-filtro="sucesso" aria-pressed="false">Vagas abertas</button>
+    <button type="button" class="filtro" data-filtro="erro" aria-pressed="false">Urgentes</button>
+    <button type="button" class="filtro" data-filtro="neutro" aria-pressed="false">Encerrados</button>
+  </div>
+  <p class="contador destaque-total" id="contador-projetos" aria-live="polite"></p>
+
+  <!-- Contêiner preenchido pelo cards.js a partir de js/data/projetos.js -->
+  <div id="lista-projetos" class="lista-cards">
+    <noscript><p>Ative o JavaScript para ver a lista de projetos.</p></noscript>
+  </div>
+
+  <!-- Molde de um card: o navegador NÃO exibe o conteúdo de <template>;
+       o JavaScript clona este molde uma vez para cada projeto -->
+  <template id="tpl-card-projeto">
+    <section class="card">
+      <span class="badge"></span>
+      <h2 class="card__titulo">Título</h2>
+      <p class="card__descricao"></p>
+      <ul class="card__itens"></ul>
+      <div class="card__acao"></div>
+    </section>
+  </template>
+
+<!-- Modal nativo (Popover API): abre pelo botão, fecha com Esc, clique fora ou no X -->
+<div id="modal-doacao" class="modal" popover role="dialog" aria-labelledby="modal-titulo">
+  <div class="modal__cabecalho">
+    <h2 id="modal-titulo">Dados para doação</h2>
+    <button type="button" class="modal__fechar" popovertarget="modal-doacao" popovertargetaction="hide" aria-label="Fechar">&times;</button>
+  </div>
+  <div class="modal__corpo">
+    <p>Chave PIX (e-mail): <strong>contato@ongesperanca.org</strong></p>
+    <p>Doações de alimentos e materiais podem ser entregues na sede, de segunda a sexta, das 9h às 17h.</p>
+    <span class="badge badge--neutro">Recibo enviado por e-mail</span>
+  </div>
+  <div class="modal__rodape">
+    <button type="button" class="botao" popovertarget="modal-doacao" popovertargetaction="hide">Entendi</button>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+/* =========================================================
+   reset.css - zera os estilos padrão do navegador
+   Carregado ANTES do style.css para que o site parta de uma
+   base igual em todos os navegadores.
+   ========================================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;   /* largura inclui padding e borda */
+  margin: 0;
+  padding: 0;
+}
+
+img, picture { display: block; max-width: 100%; }
+
+/* Campos de formulário herdam a fonte da página (por padrão não herdam) */
+input, button, textarea, select { font: inherit; }
+
+/* O atributo hidden sempre vence: sem isto, um display: flex/grid
+   de uma classe (ex.: .alerta, .card) deixaria o elemento visível */
+[hidden] { display: none !important; }
