@@ -44,6 +44,18 @@ function copiarViews() {
         });
       }
 
+      // Página na raiz do dist/: redireciona para html/index.html. Sem ela,
+      // o endereço principal do site (ex.: GitHub Pages) daria erro 404.
+      this.emitFile({
+        type: 'asset',
+        fileName: 'index.html',
+        source: '<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">'
+          + '<meta http-equiv="refresh" content="0; url=html/index.html">'
+          + '<title>ONG Esperança</title></head><body>'
+          + '<p><a href="html/index.html">Acessar o site da ONG Esperança</a></p>'
+          + '</body></html>',
+      });
+
       const pasta = 'html/views';
       for (const arquivo of await readdir(pasta)) {
         if (!arquivo.endsWith('.html')) continue;
