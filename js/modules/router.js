@@ -25,8 +25,7 @@ let controlador = null;
 // Ex.: "#/projetos/voluntariado" -> { rota: "projetos", secao: "voluntariado" }
 function lerHash() {
   const [, rota, secao] = location.hash.split('/');
-  // toLowerCase: "#/Cadastro" digitado à mão também funciona
-  return { rota: (rota || ROTA_PADRAO).toLowerCase(), secao };
+  return { rota: rota || ROTA_PADRAO, secao };
 }
 
 // Marca no menu o link da página atual (aria-current também muda o estilo via CSS)
