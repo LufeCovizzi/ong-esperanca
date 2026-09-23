@@ -4,10 +4,13 @@ Todas as mudanças relevantes do projeto são registradas aqui.
 O formato segue o [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/)
 e o projeto usa [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
-## [Não lançado]
+## [1.0.2] - 2026-09-23
+
+### Corrigido
+- Link "Pular para o conteúdo" abria a página inicial em vez de levar o foco ao conteúdo (#1).
 
 ### Adicionado
-- CHANGELOG com o histórico de versões.
+- CHANGELOG com o histórico de versões (#2).
 
 ## [1.0.1] - 2026-09-23
 
