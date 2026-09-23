@@ -463,7 +463,9 @@ footer { text-align: center; padding: 1rem; background: var(--rodape-fundo); col
   header { flex-wrap: nowrap; padding: 1rem 2rem; }
 
   /* Menu horizontal: some o hambúrguer, aparece a barra de links */
-  .menu-icone { display: none; }
+  /* No desktop o hambúrguer some: o checkbox também precisa sair da ordem do
+     Tab (display: none). Antes ele ficava invisível mas focável e sem rótulo. */
+  .menu-toggle, .menu-icone { display: none; }
   nav { margin-left: auto; }                     /* menu à direita, antes do seletor de tema */
   .seletor-tema { order: 4; width: auto; margin-left: 1.5rem; }  /* desktop: depois do menu */
   nav { flex-basis: auto; max-height: none; overflow: visible; }
