@@ -12,7 +12,9 @@ import { iniciarToast } from './modules/toast.js';
 import { iniciarCards } from './modules/cards.js';
 import { iniciarFiltros } from './modules/filtros.js';
 import { iniciarGrafico } from './modules/grafico.js';
+import { iniciarTema } from './modules/tema.js';
 
+iniciarTema();
 iniciarMenu();
 iniciarFormulario();
 iniciarValidacao();
