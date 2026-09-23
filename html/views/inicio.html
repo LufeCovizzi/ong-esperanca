@@ -3,8 +3,16 @@
     <h1 tabindex="-1">Quem somos</h1>
     <p>Somos uma organização sem fins lucrativos dedicada a promover ações sociais e apoiar pessoas em situação de vulnerabilidade.</p>
     <picture>
-      <source srcset="../imagens/banner.webp" type="image/webp">
-      <img src="../imagens/banner.jpg" alt="Ilustração de voluntários da ONG reunidos em uma ação social" width="1200" height="500">
+      <!-- srcset: 3 larguras; sizes: largura real exibida em cada breakpoint.
+           O navegador baixa só a menor imagem que atende à tela (e à densidade de pixels). -->
+      <source type="image/webp"
+              srcset="../imagens/banner-480.webp 480w, ../imagens/banner-800.webp 800w, ../imagens/banner.webp 1200w"
+              sizes="(min-width: 1280px) 760px, (min-width: 1024px) 645px, calc(100vw - 48px)">
+      <img src="../imagens/banner-800.jpg"
+           srcset="../imagens/banner-480.jpg 480w, ../imagens/banner-800.jpg 800w, ../imagens/banner.jpg 1200w"
+           sizes="(min-width: 1280px) 760px, (min-width: 1024px) 645px, calc(100vw - 48px)"
+           alt="Ilustração de voluntários da ONG reunidos em uma ação social"
+           width="1200" height="500" fetchpriority="high" decoding="async">
     </picture>
   </section>
   <section class="contato">
