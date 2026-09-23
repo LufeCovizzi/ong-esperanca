@@ -1,0 +1,77 @@
+<!-- Fragmento da rota #/componentes: injetado dentro de <main id="app"> pelo router.js -->
+  <section class="destaque-total">
+    <h1 tabindex="-1">Guia de componentes</h1>
+    <p>Padrão visual dos componentes de feedback do site. Basta copiar o HTML e trocar o modificador (<code>--sucesso</code>, <code>--info</code>, <code>--aviso</code>, <code>--erro</code>).</p>
+  </section>
+
+  <section class="card card--largo">
+    <h2>Badges (etiquetas)</h2>
+    <p>Classificam uma informação em poucas palavras.</p>
+    <div class="vitrine">
+      <span class="badge badge--sucesso">Vagas abertas</span>
+      <span class="badge badge--info">Novo</span>
+      <span class="badge badge--aviso">Últimos dias</span>
+      <span class="badge badge--erro">Urgente</span>
+      <span class="badge badge--neutro">Encerrado</span>
+    </div>
+    <pre><code>&lt;span class="badge badge--sucesso"&gt;Vagas abertas&lt;/span&gt;</code></pre>
+  </section>
+
+  <section class="card card--largo">
+    <h2>Alertas</h2>
+    <p>Mensagens fixas dentro da página.</p>
+    <div class="alerta alerta--sucesso" role="status">
+      <strong class="alerta__titulo">Sucesso:</strong>
+      <p>Sua doação foi registrada. Obrigado!</p>
+    </div>
+    <div class="alerta alerta--info" role="note">
+      <strong class="alerta__titulo">Informação:</strong>
+      <p>O próximo mutirão acontece no sábado, às 9h.</p>
+    </div>
+    <div class="alerta alerta--aviso" role="note">
+      <strong class="alerta__titulo">Atenção:</strong>
+      <p>A Campanha do Agasalho termina no fim do mês.</p>
+    </div>
+    <div class="alerta alerta--erro" role="alert">
+      <strong class="alerta__titulo">Erro:</strong>
+      <p>Não foi possível enviar o formulário. Tente novamente.</p>
+    </div>
+    <pre><code>&lt;div class="alerta alerta--erro" role="alert"&gt;
+&lt;strong class="alerta__titulo"&gt;Erro:&lt;/strong&gt;
+&lt;p&gt;Mensagem&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+  </section>
+
+  <section class="card card--largo">
+    <h2>Toast (notificação)</h2>
+    <p>Aviso temporário no canto da tela, sem bloquear a navegação. Some sozinho após 5 segundos.</p>
+    <div class="vitrine vitrine--coluna">
+      <div class="toast toast--sucesso toast--exemplo" role="status">
+        <p><strong>Cadastro enviado!</strong> Em breve entraremos em contato.</p>
+      </div>
+      <div class="toast toast--erro toast--exemplo" role="status">
+        <p><strong>Falha no envio.</strong> Verifique sua conexão.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card card--largo">
+    <h2>Modal</h2>
+    <p>Janela sobre a página para informações que pedem atenção. Fecha com Esc, clique fora ou no botão.</p>
+    <button type="button" class="botao" popovertarget="modal-exemplo">Abrir modal de exemplo</button>
+  </section>
+
+<div id="modal-exemplo" class="modal" popover role="dialog" aria-labelledby="modal-exemplo-titulo">
+  <div class="modal__cabecalho">
+    <h2 id="modal-exemplo-titulo">Confirmar inscrição</h2>
+    <button type="button" class="modal__fechar" popovertarget="modal-exemplo" popovertargetaction="hide" aria-label="Fechar">&times;</button>
+  </div>
+  <div class="modal__corpo">
+    <p>Você será inscrito como voluntário na ação <strong>Distribuição de alimentos</strong>.</p>
+    <span class="badge badge--info">Sábado, 9h</span>
+  </div>
+  <div class="modal__rodape">
+    <button type="button" class="botao botao--secundario" popovertarget="modal-exemplo" popovertargetaction="hide">Cancelar</button>
+    <button type="button" class="botao" popovertarget="modal-exemplo" popovertargetaction="hide">Confirmar</button>
+  </div>
+</div>

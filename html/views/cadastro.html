@@ -1,0 +1,36 @@
+<!-- Fragmento da rota #/cadastro: injetado dentro de <main id="app"> pelo router.js -->
+  <h1 class="titulo-pagina" tabindex="-1">Cadastro</h1>
+  <div class="alerta alerta--info titulo-pagina" role="note">
+    <strong class="alerta__titulo">Importante:</strong>
+    <p>Todos os campos são obrigatórios. Seus dados são usados apenas para contato sobre as ações da ONG.</p>
+  </div>
+  <form action="#/cadastro" method="post" class="formulario">
+    <fieldset>
+      <legend>Dados pessoais</legend>
+      <label for="nome">Nome completo:</label>
+      <input type="text" id="nome" name="nome" autocomplete="name" required>
+      <label for="email">E-mail:</label>
+      <input type="email" id="email" name="email" autocomplete="email" placeholder="nome@exemplo.com" required>
+      <label for="nascimento">Data de nascimento:</label>
+      <input type="date" id="nascimento" name="nascimento" required>
+    </fieldset>
+    <fieldset>
+      <legend>Endereço</legend>
+      <label for="endereco">Endereço:</label>
+      <input type="text" id="endereco" name="endereco" autocomplete="address-line1" required>
+      <label for="cidade">Cidade:</label>
+      <input type="text" id="cidade" name="cidade" required>
+      <label for="estado">Estado (UF):</label>
+      <input type="text" id="estado" name="estado" maxlength="2" pattern="[A-Za-z]{2}" placeholder="SP" required>
+      <label for="cep">CEP (somente números):</label>
+      <input type="text" id="cep" name="cep" inputmode="numeric" pattern="[0-9]{8}" placeholder="15130000" required>
+    </fieldset>
+    <button type="submit">Enviar cadastro</button>
+  </form>
+
+  <!-- Preenchida pelo persistencia.js com dados do localStorage; oculta se vazia -->
+  <section id="historico" class="card card--largo historico" hidden>
+    <h2>Cadastros feitos neste navegador</h2>
+    <ul class="historico__lista"></ul>
+    <button type="button" class="botao botao--secundario historico__limpar">Limpar histórico</button>
+  </section>
