@@ -3,22 +3,125 @@
    Estratégia: mobile-first + CSS Grid de 12 colunas
    ========================================================= */
 
-/* ---------- 1. Variáveis ---------- */
+/* ---------- 1. Variáveis de cor (temas) ----------
+   Todas as cores do site vêm destas variáveis semânticas.
+   Cada tema só troca os VALORES; as regras do CSS não mudam.
+   - Claro: padrão
+   - Escuro: [data-tema="escuro"] ou preferência do sistema
+   - Alto contraste: [data-tema="contraste"] (escolhido no seletor)
+   Contrastes medidos com a fórmula de luminância da WCAG 2.1
+   (texto >= 4.5:1; bordas e ícones >= 3:1).
+   ------------------------------------------------------- */
 :root {
-  --verde: #2e7d32;
-  --verde-escuro: #1b5e20;
-  --texto: #263238;
-  --fundo: #f5f7f5;
+  color-scheme: light;
 
-  /* Paleta de feedback: cor forte (texto/borda) + cor clara (fundo) */
+  /* Base */
+  --fundo: #f5f7f5;
+  --superficie: #ffffff;
+  --texto: #263238;
+  --texto-suave: #546e7a;
+  --titulo: #1b5e20;
+  --link: #0d47a1;
+  --borda-suave: #c8e6c9;
+  --sombra: rgb(0 0 0 / 12%);
+
+  /* Marca: cabeçalho, rodapé e botões */
+  --cabecalho-fundo: #2e7d32;
+  --cabecalho-texto: #ffffff;
+  --submenu-fundo: #1b5e20;
+  --submenu-hover: #2e7d32;
+  --rodape-fundo: #1b5e20;
+  --rodape-texto: #ffffff;
+  --primaria: #2e7d32;
+  --primaria-hover: #1b5e20;
+  --sobre-primaria: #ffffff;
+  --foco: #0b3d91;             /* anel de foco (antes #ffb300: só 1,8:1 no fundo claro) */
+
+  /* Campos de formulário */
+  --campo-fundo: #ffffff;
+  --campo-borda: #6b7c85;      /* antes #b0bec5: só 1,9:1 */
+  --placeholder: #5f7079;      /* antes #90a4ae: só 2,6:1 */
+  --campo-foco: #1565c0;
+  --campo-sucesso: #2e7d32;
+  --campo-erro: #c62828;
+  --campo-erro-fundo: #fff5f5;
+  --desabilitado-fundo: #b0bec5;
+  --desabilitado-texto: #37474f;
+
+  /* Feedback: cor forte (texto/borda) + cor clara (fundo) */
   --sucesso: #1b5e20;  --sucesso-claro: #e8f5e9;
   --info:    #0d47a1;  --info-claro:    #e3f2fd;
   --aviso:   #8a4b00;  --aviso-claro:   #fff3e0;  --aviso-borda: #ef6c00;
   --erro:    #b71c1c;  --erro-claro:    #ffebee;
   --neutro:  #455a64;  --neutro-claro:  #eceff1;
+
+  /* Layout */
   --gap: 1rem;              /* espaço entre colunas (muda nos breakpoints) */
   --largura-max: 100%;      /* largura máxima do conteúdo */
 }
+
+/* ---------- Tema ESCURO ----------
+   Mesmos valores em dois seletores:
+   1) quando o usuário escolhe "Escuro" no seletor;
+   2) quando está em "Automático" e o sistema operacional usa modo escuro. */
+:root[data-tema="escuro"] {
+  color-scheme: dark;
+  --fundo: #121a14;  --superficie: #1d2721;  --texto: #e3ebe5;  --texto-suave: #b4c2ba;
+  --titulo: #9fdca3;  --link: #9ec5ff;  --borda-suave: #3a4a40;  --sombra: rgb(0 0 0 / 45%);
+  --cabecalho-fundo: #173a1b;  --cabecalho-texto: #ffffff;  --submenu-fundo: #0f2912;  --submenu-hover: #235a29;
+  --rodape-fundo: #0f2912;  --rodape-texto: #e3ebe5;
+  --primaria: #7cc47f;  --primaria-hover: #a5d6a7;  --sobre-primaria: #0b1f0d;  --foco: #ffd54f;
+  --campo-fundo: #121a14;  --campo-borda: #8d9e95;  --placeholder: #93a39a;  --campo-foco: #9ec5ff;
+  --campo-sucesso: #81c784;  --campo-erro: #ff8a80;  --campo-erro-fundo: #2d1414;
+  --desabilitado-fundo: #3a4a40;  --desabilitado-texto: #b4c2ba;
+  --sucesso: #a5d6a7;  --sucesso-claro: #16301a;
+  --info:    #9ec5ff;  --info-claro:    #10263f;
+  --aviso:   #ffcc80;  --aviso-claro:   #332100;  --aviso-borda: #ffa726;
+  --erro:    #ff9e9e;  --erro-claro:    #361515;
+  --neutro:  #cfd8dc;  --neutro-claro:  #2a3530;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema]) {
+    color-scheme: dark;
+    --fundo: #121a14;  --superficie: #1d2721;  --texto: #e3ebe5;  --texto-suave: #b4c2ba;
+    --titulo: #9fdca3;  --link: #9ec5ff;  --borda-suave: #3a4a40;  --sombra: rgb(0 0 0 / 45%);
+    --cabecalho-fundo: #173a1b;  --cabecalho-texto: #ffffff;  --submenu-fundo: #0f2912;  --submenu-hover: #235a29;
+    --rodape-fundo: #0f2912;  --rodape-texto: #e3ebe5;
+    --primaria: #7cc47f;  --primaria-hover: #a5d6a7;  --sobre-primaria: #0b1f0d;  --foco: #ffd54f;
+    --campo-fundo: #121a14;  --campo-borda: #8d9e95;  --placeholder: #93a39a;  --campo-foco: #9ec5ff;
+    --campo-sucesso: #81c784;  --campo-erro: #ff8a80;  --campo-erro-fundo: #2d1414;
+    --desabilitado-fundo: #3a4a40;  --desabilitado-texto: #b4c2ba;
+    --sucesso: #a5d6a7;  --sucesso-claro: #16301a;
+    --info:    #9ec5ff;  --info-claro:    #10263f;
+    --aviso:   #ffcc80;  --aviso-claro:   #332100;  --aviso-borda: #ffa726;
+    --erro:    #ff9e9e;  --erro-claro:    #361515;
+    --neutro:  #cfd8dc;  --neutro-claro:  #2a3530;
+  }
+}
+
+/* ---------- Tema ALTO CONTRASTE ----------
+   Preto, branco e amarelo (contrastes de 15:1 a 21:1). As sombras
+   dão lugar a bordas sólidas e todos os links ficam sublinhados. */
+:root[data-tema="contraste"] {
+  color-scheme: dark;
+  --fundo: #000000;  --superficie: #000000;  --texto: #ffffff;  --texto-suave: #ffffff;
+  --titulo: #ffff00;  --link: #ffff00;  --borda-suave: #ffffff;  --sombra: transparent;
+  --cabecalho-fundo: #000000;  --cabecalho-texto: #ffffff;  --submenu-fundo: #000000;  --submenu-hover: #333333;
+  --rodape-fundo: #000000;  --rodape-texto: #ffffff;
+  --primaria: #ffff00;  --primaria-hover: #ffffff;  --sobre-primaria: #000000;  --foco: #00ffff;
+  --campo-fundo: #000000;  --campo-borda: #ffffff;  --placeholder: #d0d0d0;  --campo-foco: #00ffff;
+  --campo-sucesso: #00ff66;  --campo-erro: #ff6666;  --campo-erro-fundo: #000000;
+  --desabilitado-fundo: #444444;  --desabilitado-texto: #ffffff;
+  --sucesso: #00ff66;  --sucesso-claro: #000000;
+  --info:    #00ffff;  --info-claro:    #000000;
+  --aviso:   #ffff00;  --aviso-claro:   #000000;  --aviso-borda: #ffff00;
+  --erro:    #ff6666;  --erro-claro:    #000000;
+  --neutro:  #ffffff;  --neutro-claro:  #000000;
+}
+:root[data-tema="contraste"] :is(.card, .contato, fieldset, .modal, .toast, .alerta, header, footer, .submenu) {
+  border: 2px solid var(--texto);
+}
+:root[data-tema="contraste"] a { text-decoration: underline; }
 
 /* O reset fica em reset.css (carregado antes deste arquivo) */
 
@@ -77,9 +180,33 @@ header {
   align-items: center;
   gap: .75rem;
   padding: 1rem;
-  background: var(--verde);
+  background: var(--cabecalho-fundo);
 }
-.marca { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; color: #fff; text-decoration: none; font-size: 1.3rem; font-weight: bold; }
+.marca { display: flex; align-items: center; gap: .75rem; flex-shrink: 0; color: var(--cabecalho-texto); text-decoration: none; font-size: 1.3rem; font-weight: bold; }
+
+/* ---------- Seletor de tema ---------- */
+.seletor-tema {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: .4rem;
+  order: 2;                        /* celular: linha própria, abaixo do logo e do ☰ */
+  width: 100%;
+  color: var(--cabecalho-texto);
+  font-size: .9rem;
+}
+.menu-icone { order: 1; }
+nav { order: 3; }
+.seletor-tema label { margin: 0; }
+.seletor-tema select {
+  padding: .3rem .4rem;
+  border: 2px solid var(--cabecalho-texto);
+  border-radius: 6px;
+  background: var(--superficie);
+  color: var(--texto);
+  font: inherit;
+}
+.seletor-tema select:focus-visible { outline: 3px solid var(--cabecalho-texto); outline-offset: 2px; }
 
 /* =========================================================
    MENU RESPONSIVO
@@ -107,7 +234,7 @@ header {
 .barras, .barras::before, .barras::after {
   display: block;
   width: 26px; height: 3px;
-  background: #fff;
+  background: var(--cabecalho-texto);
   border-radius: 2px;
   transition: transform .3s ease, background-color .3s ease;
 }
@@ -117,7 +244,7 @@ header {
 .barras::after  { top: 8px; }
 
 /* Foco visível no ícone quando o checkbox recebe foco via teclado */
-.menu-toggle:focus-visible + .menu-icone { outline: 3px solid #fff; outline-offset: 2px; }
+.menu-toggle:focus-visible + .menu-icone { outline: 3px solid var(--cabecalho-texto); outline-offset: 2px; }
 
 /* Menu recolhido: altura 0 e conteúdo escondido */
 nav {
@@ -130,9 +257,9 @@ nav {
 .menu a {
   display: block;
   padding: .75rem .5rem;
-  color: #fff;
+  color: var(--cabecalho-texto);
   text-decoration: none;
-  border-top: 1px solid rgb(255 255 255 / 20%);
+  border-top: 1px solid color-mix(in srgb, var(--cabecalho-texto) 20%, transparent);
 }
 .menu a:hover, .menu a:focus-visible, .menu a[aria-current="page"] { text-decoration: underline; }
 .submenu { list-style: none; padding: 0 0 0 1rem; margin: 0; } /* no mobile: submenu indentado, sempre visível */
@@ -145,18 +272,19 @@ nav {
 .menu-toggle:checked + .menu-icone .barras::before { transform: translateY(8px) rotate(45deg); }
 .menu-toggle:checked + .menu-icone .barras::after  { transform: translateY(-8px) rotate(-45deg); }
 
-h1, h2 { color: var(--verde-escuro); margin-bottom: .5rem; line-height: 1.2; }
+h1, h2 { color: var(--titulo); margin-bottom: .5rem; line-height: 1.2; }
 p, ul { margin-bottom: 1rem; }
 ul { padding-left: 1.5rem; }
 img { display: block; max-width: 100%; height: auto; border-radius: 8px; }
-figcaption { font-size: .9rem; color: #546e7a; }
+figcaption { font-size: .9rem; color: var(--texto-suave); }
+a { color: var(--link); }
 address { font-style: normal; }
 
 .card, .contato {
-  background: #fff;
+  background: var(--superficie);
   padding: 1rem;
   border-radius: 8px;
-  box-shadow: 0 1px 4px rgb(0 0 0 / 10%);
+  box-shadow: 0 1px 4px var(--sombra);
 }
 
 /* Cards: Flexbox em coluna para empilhar título, texto, lista e botão */
@@ -172,16 +300,16 @@ address { font-style: normal; }
 .filtros { display: flex; flex-wrap: wrap; gap: .5rem; }
 .filtro {
   padding: .35rem .9rem;
-  background: #fff;
-  color: var(--verde-escuro);
-  border: 2px solid var(--verde);
+  background: var(--superficie);
+  color: var(--titulo);
+  border: 2px solid var(--primaria);
   border-radius: 999px;
   box-shadow: none;
   font-size: .95rem;
 }
 .filtro:hover { background: var(--sucesso-claro); box-shadow: none; transform: none; }
-.filtro[aria-pressed="true"] { background: var(--verde); color: #fff; }  /* filtro ativo */
-.contador { margin: 0; color: var(--neutro); font-size: .9rem; }  /* empurra a área do botão para o fim do card */
+.filtro[aria-pressed="true"] { background: var(--primaria); color: var(--sobre-primaria); }  /* filtro ativo */
+.contador { margin: 0; color: var(--texto-suave); font-size: .9rem; }
 
 /* Contêiner dos cards gerados por template: é um grid de 12 colunas
    dentro do grid principal, então as regras .card (span 12/6/4) continuam valendo */
@@ -206,8 +334,8 @@ address { font-style: normal; }
 .botao, button {
   display: inline-block;
   padding: .6rem 1.2rem;
-  background: var(--verde);
-  color: #fff;
+  background: var(--primaria);
+  color: var(--sobre-primaria);
   border: 2px solid transparent;
   border-radius: 6px;
   text-decoration: none;
@@ -219,14 +347,14 @@ address { font-style: normal; }
 
 /* hover: mouse em cima -> cor mais escura, sombra maior, "sobe" 2px */
 .botao:hover, button:hover {
-  background: var(--verde-escuro);
+  background: var(--primaria-hover);
   box-shadow: 0 4px 10px rgb(0 0 0 / 25%);
   transform: translateY(-2px);
 }
 
 /* focus-visible: navegação por teclado -> anel de foco bem visível */
 .botao:focus-visible, button:focus-visible {
-  outline: 3px solid #ffb300;
+  outline: 3px solid var(--foco);
   outline-offset: 3px;
 }
 
@@ -238,15 +366,15 @@ address { font-style: normal; }
 
 /* disabled: botão desabilitado -> cinza, sem sombra e sem clique */
 button:disabled {
-  background: #b0bec5;
-  color: #eceff1;
+  background: var(--desabilitado-fundo);
+  color: var(--desabilitado-texto);
   box-shadow: none;
   transform: none;
   cursor: not-allowed;
   opacity: .7;
 }
 
-fieldset { border: 1px solid #c8e6c9; border-radius: 8px; padding: 1rem; background: #fff; }
+fieldset { border: 1px solid var(--borda-suave); border-radius: 8px; padding: 1rem; background: var(--superficie); }
 legend { font-weight: bold; padding: 0 .5rem; }
 label { display: block; margin-top: .75rem; }
 
@@ -256,18 +384,19 @@ label { display: block; margin-top: .75rem; }
 input {
   width: 100%;
   padding: .5rem 2.25rem .5rem .5rem;   /* espaço à direita para o ícone ✓ / ✗ */
-  border: 2px solid #b0bec5;
+  border: 2px solid var(--campo-borda);
   border-radius: 4px;
-  background: #fff no-repeat right .6rem center / 1.1rem;
+  color: var(--texto);
+  background: var(--campo-fundo) no-repeat right .6rem center / 1.1rem;
   transition: border-color .2s ease, box-shadow .2s ease;
 }
-input::placeholder { color: #90a4ae; }
+input::placeholder { color: var(--placeholder); opacity: 1; }
 
 /* focus: campo ativo -> borda azul e brilho */
 input:focus {
   outline: none;
-  border-color: #1565c0;
-  box-shadow: 0 0 0 3px rgb(21 101 192 / 25%);
+  border-color: var(--campo-foco);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--campo-foco) 30%, transparent);
 }
 
 /* As classes abaixo são adicionadas/removidas pelo validacao.js.
@@ -275,30 +404,48 @@ input:focus {
 
 /* SUCESSO: campo aprovado pelas regras */
 input.campo--sucesso {
-  border-color: #2e7d32;
+  border-color: var(--campo-sucesso);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%232e7d32' stroke-width='2.5' d='M2 8.5l4 4 8-9'/%3E%3C/svg%3E");
 }
 
 /* ERRO: campo vazio ou em formato incorreto */
 input.campo--erro {
-  border-color: #c62828;
-  background-color: #fff5f5;
+  border-color: var(--campo-erro);
+  background-color: var(--campo-erro-fundo);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath stroke='%23c62828' stroke-width='2.5' d='M3 3l10 10M13 3L3 13'/%3E%3C/svg%3E");
 }
-input.campo--erro:focus { box-shadow: 0 0 0 3px rgb(198 40 40 / 25%); }
+input.campo--erro:focus { box-shadow: 0 0 0 3px color-mix(in srgb, var(--campo-erro) 30%, transparent); }
+
+/* Nos temas escuros, os ícones SVG usam tons claros para manter 3:1 */
+:root[data-tema="escuro"] input.campo--sucesso,
+:root[data-tema="contraste"] input.campo--sucesso {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2381c784' stroke-width='2.5' d='M2 8.5l4 4 8-9'/%3E%3C/svg%3E");
+}
+:root[data-tema="escuro"] input.campo--erro,
+:root[data-tema="contraste"] input.campo--erro {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath stroke='%23ff8a80' stroke-width='2.5' d='M3 3l10 10M13 3L3 13'/%3E%3C/svg%3E");
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema]) input.campo--sucesso {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%2381c784' stroke-width='2.5' d='M2 8.5l4 4 8-9'/%3E%3C/svg%3E");
+  }
+  :root:not([data-tema]) input.campo--erro {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath stroke='%23ff8a80' stroke-width='2.5' d='M3 3l10 10M13 3L3 13'/%3E%3C/svg%3E");
+  }
+}
 
 /* Mensagem de erro criada pelo JavaScript logo abaixo do campo */
 .mensagem-erro {
   display: block;
   margin-top: .25rem;
-  color: #c62828;
+  color: var(--campo-erro);
   font-size: .875rem;
   animation: erro-entra .2s ease-out;
 }
 .mensagem-erro::before { content: "\26A0  "; }  /* ícone ⚠ antes do texto */
 @keyframes erro-entra { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: none; } }
 
-footer { text-align: center; padding: 1rem; background: var(--verde-escuro); color: #fff; }
+footer { text-align: center; padding: 1rem; background: var(--rodape-fundo); color: var(--rodape-texto); }
 
 /* =========================================================
    5. BREAKPOINTS (mobile-first: cada um soma ao anterior)
@@ -316,7 +463,11 @@ footer { text-align: center; padding: 1rem; background: var(--verde-escuro); col
   header { flex-wrap: nowrap; padding: 1rem 2rem; }
 
   /* Menu horizontal: some o hambúrguer, aparece a barra de links */
-  .menu-icone { display: none; }
+  /* No desktop o hambúrguer some: o checkbox também precisa sair da ordem do
+     Tab (display: none). Antes ele ficava invisível mas focável e sem rótulo. */
+  .menu-toggle, .menu-icone { display: none; }
+  nav { margin-left: auto; }                     /* menu à direita, antes do seletor de tema */
+  .seletor-tema { order: 4; width: auto; margin-left: 1.5rem; }  /* desktop: depois do menu */
   nav { flex-basis: auto; max-height: none; overflow: visible; }
   .menu { display: flex; gap: 1.5rem; }
   .menu > li { position: relative; }  /* referência para posicionar o dropdown */
@@ -331,7 +482,7 @@ footer { text-align: center; padding: 1rem; background: var(--verde-escuro); col
     z-index: 10;
     min-width: 13rem;
     padding: .5rem 0;
-    background: var(--verde-escuro);
+    background: var(--submenu-fundo);
     border-radius: 0 0 6px 6px;
     box-shadow: 0 4px 12px rgb(0 0 0 / 20%);
     opacity: 0;
@@ -340,7 +491,7 @@ footer { text-align: center; padding: 1rem; background: var(--verde-escuro); col
     transition: opacity .25s ease, transform .25s ease, visibility .25s;
   }
   .submenu a { padding: .5rem 1rem; }
-  .submenu a:hover, .submenu a:focus-visible { background: var(--verde); }
+  .submenu a:hover, .submenu a:focus-visible { background: var(--submenu-hover); }
 
   /* Dropdown VISÍVEL ao passar o mouse ou navegar com Tab */
   .tem-submenu:hover > .submenu,
@@ -432,8 +583,8 @@ footer { text-align: center; padding: 1rem; background: var(--verde-escuro); col
   padding: .9rem 1rem;
   border-left: 5px solid;
   border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 6px 20px rgb(0 0 0 / 20%);
+  background: var(--superficie);
+  box-shadow: 0 6px 20px var(--sombra);
 }
 .toast p { margin: 0; }
 .toast--sucesso { border-color: var(--sucesso); color: var(--sucesso); }
@@ -467,7 +618,7 @@ footer { text-align: center; padding: 1rem; background: var(--verde-escuro); col
   padding: 0;
   border: none;
   border-radius: 10px;
-  background: #fff;
+  background: var(--superficie);
   color: var(--texto);
   box-shadow: 0 10px 40px rgb(0 0 0 / 30%);
 }
@@ -501,7 +652,7 @@ footer { text-align: center; padding: 1rem; background: var(--verde-escuro); col
 }
 .modal__fechar:hover { background: var(--neutro-claro); transform: none; box-shadow: none; }
 
-.botao--secundario { background: #fff; color: var(--verde); border-color: var(--verde); }
+.botao--secundario { background: var(--superficie); color: var(--titulo); border-color: var(--primaria); }
 .botao--secundario:hover { background: var(--sucesso-claro); }
 
 /* ---------- Histórico de cadastros (localStorage) ---------- */
@@ -511,7 +662,7 @@ footer { text-align: center; padding: 1rem; background: var(--verde-escuro); col
 /* ---------- Gráfico de impacto (Chart.js) ---------- */
 .grafico { position: relative; height: 320px; margin-bottom: 1rem; }  /* Chart.js ocupa 100% deste bloco */
 .impacto details { margin-top: .5rem; }
-.impacto summary { cursor: pointer; color: var(--verde-escuro); font-weight: bold; }
+.impacto summary { cursor: pointer; color: var(--titulo); font-weight: bold; }
 .impacto table { width: 100%; margin-top: .75rem; border-collapse: collapse; }
 .impacto caption { text-align: left; font-weight: bold; margin-bottom: .5rem; }
 .impacto th, .impacto td { padding: .4rem .6rem; border-bottom: 1px solid var(--neutro-claro); text-align: left; }
@@ -531,8 +682,8 @@ pre { max-width: 100%; overflow-x: auto; padding: .75rem; background: var(--neut
   left: 1rem;
   z-index: 200;
   padding: .5rem 1rem;
-  background: #fff;
-  color: var(--verde-escuro);
+  background: var(--superficie);
+  color: var(--titulo);
   border-radius: 0 0 6px 6px;
 }
 .pular-conteudo:focus { top: 0; }
@@ -540,7 +691,7 @@ pre { max-width: 100%; overflow-x: auto; padding: .75rem; background: var(--neut
 /* Títulos recebem foco via JS após a troca de rota; sem contorno visual */
 h1:focus, main:focus { outline: none; }
 
-footer a { color: #fff; }
+footer a { color: var(--rodape-texto); }
 
 /* Acessibilidade: quem prefere menos movimento não vê animações */
 @media (prefers-reduced-motion: reduce) {

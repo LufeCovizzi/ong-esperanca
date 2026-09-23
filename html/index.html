@@ -6,6 +6,13 @@
   <meta name="description" content="ONG Esperança: projetos sociais, voluntariado, doações e cadastro de voluntários.">
   <title>ONG Esperança</title>
   <link rel="icon" href="../imagens/logo.png" type="image/png">
+  <!-- Aplica o tema salvo ANTES de desenhar a página (evita piscar no tema errado) -->
+  <script>
+    try {
+      const tema = JSON.parse(localStorage.getItem('ongEsperanca:tema'));
+      if (tema && tema !== 'sistema') document.documentElement.dataset.tema = tema;
+    } catch (erro) { /* sem localStorage: segue o tema do sistema */ }
+  </script>
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/style.css">
   <script type="module" src="../js/main.js"></script>
@@ -20,6 +27,15 @@
       </picture>
       <span>ONG Esperança</span>
     </a>
+    <div class="seletor-tema">
+      <label for="tema">Tema</label>
+      <select id="tema">
+        <option value="sistema">Automático</option>
+        <option value="claro">Claro</option>
+        <option value="escuro">Escuro</option>
+        <option value="contraste">Alto contraste</option>
+      </select>
+    </div>
     <input type="checkbox" id="menu-toggle" class="menu-toggle">
     <label for="menu-toggle" class="menu-icone">
       <span class="sr-only">Abrir menu</span>
